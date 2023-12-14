@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # motus_clone
 
 A motus clone app
