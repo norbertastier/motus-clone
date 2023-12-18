@@ -30,26 +30,26 @@ class KeyBoard extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   mainAxisSize: MainAxisSize.max,
                   children: keyRow.map((letter) {
-
                     LetterStatus? _status;
                     Color? _backgroundKeyColor;
+                    Color? _borderKeyColor;
 
                     _status = keyMap[letter];
 
-
                     switch (_status) {
                       case LetterStatus.correct:
-                        _backgroundKeyColor = correctColor;
+                        _backgroundKeyColor = correctColorKey;
+                        _borderKeyColor = Colors.white;
                       case LetterStatus.inWord:
-                        _backgroundKeyColor = inWordColor;
+                        _backgroundKeyColor = inWordColorKey;
+                        _borderKeyColor = Colors.white;
                       case LetterStatus.notInWord:
-                        _backgroundKeyColor = notInWordColor;
+                        _backgroundKeyColor = Colors.transparent;
+                        _borderKeyColor = notInWordColorKey;
                       default:
                         _backgroundKeyColor = Colors.transparent;
+                        _borderKeyColor = Colors.white;
                     }
-
-                    
-
 
                     switch (letter) {
                       case 'ENT':
@@ -70,6 +70,7 @@ class KeyBoard extends StatelessWidget {
                         return _KeyboardButton(
                           letter: letter,
                           backgroundColor: _backgroundKeyColor,
+                          borderColor: _borderKeyColor,
                         );
                     }
                   }).toList(),
@@ -141,6 +142,7 @@ class _KeyboardButton extends StatelessWidget {
                       child: Text(
                         letter!,
                         style: TextStyle(
+                          color: borderColor,
                           fontWeight: FontWeight.w800,
                           fontSize: 20,
                         ),

@@ -2,9 +2,11 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:motus_clone/constants/colors.dart';
 import 'package:motus_clone/controller.dart';
 import 'package:motus_clone/data/dictionary.dart';
+import 'package:motus_clone/data/wordsForTheDraw.dart';
 import 'package:provider/provider.dart';
 
 import '../components/board.dart';
@@ -20,62 +22,112 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late String _word;
+  bool _showInvalidWordMessage = false;
+  final FocusNode _focusNode = FocusNode();
 
   @override
-
-  void initState(){
-    _word = words[Random().nextInt(words.length)];
+  void initState() {
+    _word = wordsForTheDraw[Random().nextInt(wordsForTheDraw.length)];
     print(_word);
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      Provider.of<Controller>(context, listen: false).setCorrectWord(word: _word);
+      Provider.of<Controller>(context, listen: false)
+          .setCorrectWord(word: _word);
+      Provider.of<Controller>(context, listen: false).onInvalidWord =
+          showInvalidWordMessage;
     });
 
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: background,
-      child: Center(
-        child: Container(
-          constraints: BoxConstraints(maxWidth: 430),
-          child: Scaffold(
-            appBar: AppBar(
-              centerTitle: true,
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-              titleSpacing: 0,
-              leading: HomeButton(),
-              title: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.min,
+    FocusScope.of(context).requestFocus(_focusNode);
+    return RawKeyboardListener(
+      focusNode: _focusNode,
+      onKey: (event) {
+        if (event is RawKeyDownEvent) {
+          final Controller controller =
+              Provider.of<Controller>(context, listen: false);
+          String value = '';
+          if (event.logicalKey == LogicalKeyboardKey.enter) {
+            value = 'ENT';
+          } else if (event.logicalKey == LogicalKeyboardKey.backspace) {
+            value = 'DEL';
+          } else if (event.logicalKey.keyLabel.isNotEmpty &&
+              event.logicalKey.keyLabel.length == 1 &&
+              event.logicalKey.keyLabel.contains(RegExp(r'[A-Z]'))) {
+            value = event.logicalKey.keyLabel;
+          }
+
+          if (value.isNotEmpty) {
+            controller.setKeyTapped(value: value);
+          }
+        }
+      },
+      child: Container(
+        color: background,
+        child: Center(
+          child: Container(
+            constraints: BoxConstraints(maxWidth: 430),
+            child: Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                backgroundColor: Colors.transparent,
+                elevation: 0,
+                titleSpacing: 0,
+                leading: HomeButton(),
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TitleLogo(),
+                  ],
+                ),
+              ),
+              body: Column(
                 children: [
-                  TitleLogo(),
+                  Container(
+                    height: 50,
+                  ),
+                  Container(
+                    alignment: Alignment.center,
+                    padding: EdgeInsets.only(left: 16, right: 16),
+                    child: Board(
+                      numColumns: _word.length,
+                      numRows: 6,
+                    ),
+                  ),
+                  Container(
+                      height: 60,
+                      child: _showInvalidWordMessage
+                          ? Center(
+                              child: Text(
+                                  'Le mot proposé n\'est pas dans la liste !',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  )),
+                            )
+                          : Container()),
+                  KeyBoard(),
+                  Spacer(),
                 ],
               ),
-            ),
-            body: Column(
-              children: [
-                Container(height: 50,),
-                Container(
-                  alignment: Alignment.center,
-                  padding: EdgeInsets.only(left: 16, right: 16),
-                  child: Board(
-                    numColumns: _word.length,
-                    numRows: 6,
-                  ),
-                ),
-                Container(height: 60,),
-                KeyBoard(),
-                Spacer(),
-              ],
             ),
           ),
         ),
       ),
     );
+  }
+
+  void showInvalidWordMessage() {
+    setState(() => _showInvalidWordMessage = true);
+
+    Future.delayed(Duration(seconds: 2), () {
+      if (mounted) {
+        setState(() => _showInvalidWordMessage = false);
+      }
+    });
   }
 }
 

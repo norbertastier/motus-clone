@@ -3,12 +3,15 @@ import 'package:motus_clone/components/letterModel.dart';
 import 'package:motus_clone/components/wordModel.dart';
 import 'package:motus_clone/constants/status.dart';
 import 'package:motus_clone/data/keyStatus.dart';
+import 'package:motus_clone/data/validWordsToPlayWith.dart';
 
 class Controller extends ChangeNotifier {
   String _correctWord = '';
   List<Word> InputWords = [Word()];
   GameStatus _gameStatus = GameStatus.playing;
   int maxAttemps = 6;
+
+  void Function()? onInvalidWord;
 
   int correctWordLenght() => _correctWord.length;
 
@@ -24,8 +27,12 @@ class Controller extends ChangeNotifier {
     if (value == 'ENT'){
       if (_gameStatus == GameStatus.playing &&
           InputWords.last.wordString.length == _correctWord.length) {
-        _gameStatus = GameStatus.submitting;
-        checkWord();
+        if(validWordsToPlayWith.contains(InputWords.last.wordString)){
+          _gameStatus = GameStatus.submitting;
+          checkWord();
+        }else{
+          onInvalidWord?.call();
+        }
       }
     } else if (value == 'DEL' ) {
       if (InputWords.last.wordString.length > 1 && _gameStatus == GameStatus.playing) {

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:motus_clone/components/letterModel.dart';
+import 'package:motus_clone/constants/status.dart';
 import 'package:motus_clone/controller.dart';
 import 'package:provider/provider.dart';
 
@@ -40,15 +41,21 @@ class _BoardTileState extends State<BoardTile> {
             margin: EdgeInsets.all(0),
             alignment: Alignment.center,
             decoration: BoxDecoration(
-              color: _letter.letterColor,
               border: Border.all(color: Colors.white, width: 2),
               borderRadius: BorderRadius.circular(0),
             ),
-            child: Text(
-              _letter.val,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+            child: Container(
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: _letter.letterColor,
+                shape: _letter.status == LetterStatus.inWord ? BoxShape.circle: BoxShape.rectangle,
+              ),
+              child: Text(
+                _letter.val,
+                style: const TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
