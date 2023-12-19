@@ -17,6 +17,8 @@ class Letter extends Equatable {
     switch (status) {
       case LetterStatus.initial:
         return initialColor;
+      case LetterStatus.typing:
+        return typingColor;
       case LetterStatus.notInWord:
         return notInWordColor;
       case LetterStatus.inWord:

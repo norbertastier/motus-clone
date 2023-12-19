@@ -1,5 +1,6 @@
 enum LetterStatus {
   initial,
+  typing,
   notInWord,
   inWord,
   correct,

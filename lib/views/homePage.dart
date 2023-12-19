@@ -1,11 +1,9 @@
 import 'dart:math';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:motus_clone/constants/colors.dart';
 import 'package:motus_clone/controller.dart';
-import 'package:motus_clone/data/dictionary.dart';
 import 'package:motus_clone/data/wordsForTheDraw.dart';
 import 'package:provider/provider.dart';
 
@@ -45,24 +43,7 @@ class _HomePageState extends State<HomePage> {
     return RawKeyboardListener(
       focusNode: _focusNode,
       onKey: (event) {
-        if (event is RawKeyDownEvent) {
-          final Controller controller =
-              Provider.of<Controller>(context, listen: false);
-          String value = '';
-          if (event.logicalKey == LogicalKeyboardKey.enter) {
-            value = 'ENT';
-          } else if (event.logicalKey == LogicalKeyboardKey.backspace) {
-            value = 'DEL';
-          } else if (event.logicalKey.keyLabel.isNotEmpty &&
-              event.logicalKey.keyLabel.length == 1 &&
-              event.logicalKey.keyLabel.contains(RegExp(r'[A-Z]'))) {
-            value = event.logicalKey.keyLabel;
-          }
-
-          if (value.isNotEmpty) {
-            controller.setKeyTapped(value: value);
-          }
-        }
+        _KeyDownEvent(event);
       },
       child: Container(
         color: background,
@@ -128,6 +109,27 @@ class _HomePageState extends State<HomePage> {
         setState(() => _showInvalidWordMessage = false);
       }
     });
+  }
+
+  void _KeyDownEvent(event) {
+    if (event is RawKeyDownEvent) {
+      final Controller controller =
+          Provider.of<Controller>(context, listen: false);
+      String value = '';
+      if (event.logicalKey == LogicalKeyboardKey.enter) {
+        value = 'ENT';
+      } else if (event.logicalKey == LogicalKeyboardKey.backspace) {
+        value = 'DEL';
+      } else if (event.logicalKey.keyLabel.isNotEmpty &&
+          event.logicalKey.keyLabel.length == 1 &&
+          event.logicalKey.keyLabel.contains(RegExp(r'[A-Z]'))) {
+        value = event.logicalKey.keyLabel;
+      }
+
+      if (value.isNotEmpty) {
+        controller.setKeyTapped(value: value);
+      }
+    }
   }
 }
 

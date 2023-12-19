@@ -10,6 +10,7 @@ class Controller extends ChangeNotifier {
   List<Word> InputWords = [Word()];
   GameStatus _gameStatus = GameStatus.playing;
   int maxAttemps = 6;
+  bool checkLine = false, isBackOrEnter = false;
 
   void Function()? onInvalidWord;
 
@@ -30,6 +31,7 @@ class Controller extends ChangeNotifier {
         if(validWordsToPlayWith.contains(InputWords.last.wordString)){
           _gameStatus = GameStatus.submitting;
           checkWord();
+          isBackOrEnter = true;
         }else{
           onInvalidWord?.call();
         }
@@ -37,11 +39,13 @@ class Controller extends ChangeNotifier {
     } else if (value == 'DEL' ) {
       if (InputWords.last.wordString.length > 1 && _gameStatus == GameStatus.playing) {
         InputWords.last.removeLetter();
+        isBackOrEnter = true;
       }
     } else {
       if (InputWords.last.wordString.length < _correctWord.length &&
           _gameStatus == GameStatus.playing) {
         InputWords.last.addLetter(value);
+        isBackOrEnter = false;
       }
     }
     notifyListeners();
@@ -103,6 +107,7 @@ class Controller extends ChangeNotifier {
       
     }
     print(_gameStatus);
+    //checkLine = true;
     notifyListeners();
   }
 }

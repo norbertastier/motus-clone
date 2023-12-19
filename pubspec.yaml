@@ -32,6 +32,8 @@ dependencies:
   csv: ^5.0.1
   provider: ^6.0.2
   equatable: ^2.0.3
+  animated_appear:
+  entry: ^0.0.9
   flutter:
     sdk: flutter
 
