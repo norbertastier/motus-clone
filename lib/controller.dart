@@ -8,7 +8,7 @@ import 'package:motus_clone/data/validWordsToPlayWith.dart';
 class Controller extends ChangeNotifier {
   String _correctWord = '';
   List<Word> InputWords = [Word()];
-  GameStatus _gameStatus = GameStatus.playing;
+  GameStatus gameStatus = GameStatus.playing;
   int maxAttemps = 6;
   bool checkLine = false, isBackOrEnter = false;
 
@@ -26,10 +26,10 @@ class Controller extends ChangeNotifier {
 
   setKeyTapped({required String value}) {
     if (value == 'ENT'){
-      if (_gameStatus == GameStatus.playing &&
+      if (gameStatus == GameStatus.playing &&
           InputWords.last.wordString.length == _correctWord.length) {
         if(validWordsToPlayWith.contains(InputWords.last.wordString)){
-          _gameStatus = GameStatus.submitting;
+          gameStatus = GameStatus.submitting;
           checkWord();
           isBackOrEnter = true;
         }else{
@@ -37,13 +37,13 @@ class Controller extends ChangeNotifier {
         }
       }
     } else if (value == 'DEL' ) {
-      if (InputWords.last.wordString.length > 1 && _gameStatus == GameStatus.playing) {
+      if (InputWords.last.wordString.length > 1 && gameStatus == GameStatus.playing) {
         InputWords.last.removeLetter();
         isBackOrEnter = true;
       }
     } else {
       if (InputWords.last.wordString.length < _correctWord.length &&
-          _gameStatus == GameStatus.playing) {
+          gameStatus == GameStatus.playing) {
         InputWords.last.addLetter(value);
         isBackOrEnter = false;
       }
@@ -62,7 +62,7 @@ class Controller extends ChangeNotifier {
         keyMap.update(letter.val, (value) => LetterStatus.correct);
       });
 
-      _gameStatus = GameStatus.won;
+      gameStatus = GameStatus.won;
 
     }
     else {
@@ -95,18 +95,18 @@ class Controller extends ChangeNotifier {
         }
       }
     }
-    if(InputWords.length == maxAttemps && _gameStatus != GameStatus.won){
-    _gameStatus = GameStatus.lost;
+    if(InputWords.length == maxAttemps && gameStatus != GameStatus.won){
+    gameStatus = GameStatus.lost;
     }
     else{
-      if (_gameStatus == GameStatus.submitting ) {
+      if (gameStatus == GameStatus.submitting ) {
         InputWords.add(Word());
         InputWords.last.addLetter(_correctWord[0]);
-        _gameStatus = GameStatus.playing;
+        gameStatus = GameStatus.playing;
       }
       
     }
-    print(_gameStatus);
+    print(gameStatus);
     checkLine = true;
     notifyListeners();
   }

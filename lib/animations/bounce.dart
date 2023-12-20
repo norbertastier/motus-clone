@@ -21,8 +21,8 @@ class _BounceState extends State<Bounce> with SingleTickerProviderStateMixin {
         AnimationController(duration: Duration(milliseconds: 200), vsync: this);
 
     _animation = TweenSequence<double>([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.30), weight: 1),
-      TweenSequenceItem(tween: Tween(begin: 1.30, end: 1.0), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.2), weight: 1),
+      TweenSequenceItem(tween: Tween(begin: 1.2, end: 1.0), weight: 1),
     ]).animate(CurvedAnimation(
         parent: _animationController, curve: Curves.bounceInOut));
     super.initState();
