@@ -19,13 +19,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  int _minLetter = 5;
+  int _maxLetter = 9;
+
   late String _word;
   bool _showInvalidWordMessage = false;
   final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
-    _word = wordsForTheDraw[Random().nextInt(wordsForTheDraw.length)];
+    do {
+      _word = wordsForTheDraw[Random().nextInt(wordsForTheDraw.length)];
+    } while (!(_minLetter <= _word.length && _word.length <= _maxLetter));
+
     print(_word);
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       Provider.of<Controller>(context, listen: false)
@@ -120,6 +126,8 @@ class _HomePageState extends State<HomePage> {
         value = 'ENT';
       } else if (event.logicalKey == LogicalKeyboardKey.backspace) {
         value = 'DEL';
+      } else if (event.logicalKey == LogicalKeyboardKey.period) {
+        value = event.logicalKey.keyLabel;
       } else if (event.logicalKey.keyLabel.isNotEmpty &&
           event.logicalKey.keyLabel.length == 1 &&
           event.logicalKey.keyLabel.contains(RegExp(r'[A-Z]'))) {

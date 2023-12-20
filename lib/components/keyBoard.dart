@@ -29,68 +29,71 @@ class KeyBoard extends StatelessWidget {
         : w_ = (screenSize.width / 10) - 2 * horizontal_padding;
 
     return Consumer<Controller>(builder: (_, notifier, __) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: azerty
-            .map(
-              (keyRow) => Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                mainAxisSize: MainAxisSize.max,
-                children: keyRow.map((letter) {
-                  LetterStatus? _status;
-                  Color? _backgroundKeyColor;
-                  Color? _borderKeyColor;
+      return IgnorePointer(
+        ignoring: notifier.gameOver(),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: azerty
+              .map(
+                (keyRow) => Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.max,
+                  children: keyRow.map((letter) {
+                    LetterStatus? _status;
+                    Color? _backgroundKeyColor;
+                    Color? _borderKeyColor;
 
-                  _status = keyMap[letter];
+                    _status = keyMap[letter];
 
-                  switch (_status) {
-                    case LetterStatus.correct:
-                      _backgroundKeyColor = correctColorKey;
-                      _borderKeyColor = Colors.white;
-                    case LetterStatus.inWord:
-                      _backgroundKeyColor = inWordColorKey;
-                      _borderKeyColor = Colors.white;
-                    case LetterStatus.notInWord:
-                      _backgroundKeyColor = Colors.transparent;
-                      _borderKeyColor = notInWordColorKey;
-                    default:
-                      _backgroundKeyColor = Colors.transparent;
-                      _borderKeyColor = Colors.white;
-                  }
+                    switch (_status) {
+                      case LetterStatus.correct:
+                        _backgroundKeyColor = correctColorKey;
+                        _borderKeyColor = Colors.white;
+                      case LetterStatus.inWord:
+                        _backgroundKeyColor = inWordColorKey;
+                        _borderKeyColor = Colors.white;
+                      case LetterStatus.notInWord:
+                        _backgroundKeyColor = Colors.transparent;
+                        _borderKeyColor = notInWordColorKey;
+                      default:
+                        _backgroundKeyColor = Colors.transparent;
+                        _borderKeyColor = Colors.white;
+                    }
 
-                  switch (letter) {
-                    case 'ENT':
-                      return Flexible(
-                        fit: FlexFit.tight,
-                        child: _KeyboardButton(
+                    switch (letter) {
+                      case 'ENT':
+                        return Flexible(
+                          fit: FlexFit.tight,
+                          child: _KeyboardButton(
+                            letter: letter,
+                            icon: Icons.exit_to_app,
+                            maxWidth_: w_ * 1.5,
+                            borderColor: Colors.transparent,
+                          ),
+                        );
+                      case 'DEL':
+                        return Flexible(
+                          fit: FlexFit.tight,
+                          child: _KeyboardButton(
+                            letter: letter,
+                            icon: Icons.backspace,
+                            maxWidth_: w_ * 1.5,
+                            borderColor: Colors.transparent,
+                          ),
+                        );
+                      default:
+                        return _KeyboardButton(
                           letter: letter,
-                          icon: Icons.exit_to_app,
-                          maxWidth_: w_ * 1.5,
-                          borderColor: Colors.transparent,
-                        ),
-                      );
-                    case 'DEL':
-                      return Flexible(
-                        fit: FlexFit.tight,
-                        child: _KeyboardButton(
-                          letter: letter,
-                          icon: Icons.backspace,
-                          maxWidth_: w_ * 1.5,
-                          borderColor: Colors.transparent,
-                        ),
-                      );
-                    default:
-                      return _KeyboardButton(
-                        letter: letter,
-                        backgroundColor: _backgroundKeyColor,
-                        maxWidth_: w_,
-                        borderColor: _borderKeyColor,
-                      );
-                  }
-                }).toList(),
-              ),
-            )
-            .toList(),
+                          backgroundColor: _backgroundKeyColor,
+                          maxWidth_: w_,
+                          borderColor: _borderKeyColor,
+                        );
+                    }
+                  }).toList(),
+                ),
+              )
+              .toList(),
+        ),
       );
     });
   }

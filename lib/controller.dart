@@ -14,6 +14,8 @@ class Controller extends ChangeNotifier {
 
   void Function()? onInvalidWord;
 
+  bool gameOver() => (gameStatus == GameStatus.won || gameStatus == GameStatus.lost);
+
   int correctWordLenght() => _correctWord.length;
 
   void setCorrectWord({required String word}) {
@@ -98,16 +100,15 @@ class Controller extends ChangeNotifier {
     if(InputWords.length == maxAttemps && gameStatus != GameStatus.won){
     gameStatus = GameStatus.lost;
     }
-    else{
-      if (gameStatus == GameStatus.submitting ) {
-        InputWords.add(Word());
-        InputWords.last.addLetter(_correctWord[0]);
-        gameStatus = GameStatus.playing;
-      }
-      
-    }
-    print(gameStatus);
     checkLine = true;
     notifyListeners();
+  }
+
+  addNextWord(){
+    if (gameStatus == GameStatus.submitting ) {
+      InputWords.add(Word());
+      InputWords.last.addLetter(_correctWord[0]);
+      gameStatus = GameStatus.playing;
+    }
   }
 }
