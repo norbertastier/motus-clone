@@ -88,7 +88,7 @@ class Controller extends ChangeNotifier {
           } else {
             InputWords.last.letters![i] = InputWords.last.letters![i]
                 .copyWith(status: LetterStatus.notInWord);
-            if (keyMap[guessWord[i]] != LetterStatus.correct) {
+            if (keyMap[guessWord[i]] != LetterStatus.correct && keyMap[guessWord[i]] != LetterStatus.inWord) {
               keyMap.update(guessWord[i], (value) => LetterStatus.notInWord);
             }
           }
@@ -107,7 +107,7 @@ class Controller extends ChangeNotifier {
       
     }
     print(_gameStatus);
-    //checkLine = true;
+    checkLine = true;
     notifyListeners();
   }
 }

@@ -35,7 +35,7 @@ class Board extends StatelessWidget {
                       (j, letter) => MapEntry(
                           j,
                           BoardTile(
-                            letter: Letter(val: '$i-$j'),
+                            letter: Letter.empty(),
                             indexRow: i,
                             indexColumn: j,
                           )),

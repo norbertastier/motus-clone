@@ -38,6 +38,7 @@ class Letter extends Equatable {
     );
   }
 
+
   @override
   List<Object?> get props => [val, status];
 }

@@ -6,11 +6,11 @@ import 'package:motus_clone/controller.dart';
 import 'package:provider/provider.dart';
 
 class BoardTile extends StatefulWidget {
-  final Letter letter;
+  Letter letter;
   final int indexRow;
   final int indexColumn;
 
-  const BoardTile({
+  BoardTile({
     Key? key,
     required this.letter,
     required this.indexRow,
@@ -25,16 +25,15 @@ class _BoardTileState extends State<BoardTile> {
   @override
   Widget build(BuildContext context) {
     return Consumer<Controller>(builder: (_, notifier, __) {
-      Letter _letter = Letter.empty();
       bool animate = false;
-
       if ((notifier.InputWords.length - 1 > widget.indexRow &&
               widget.indexColumn < notifier.correctWordLenght()) ||
           (notifier.InputWords.length - 1 == widget.indexRow &&
               widget.indexColumn < notifier.InputWords.last.letters!.length)) {
-
-        _letter =
-        notifier.InputWords[widget.indexRow].letters![widget.indexColumn];
+        Letter _letter =
+            notifier.InputWords[widget.indexRow].letters![widget.indexColumn];
+        widget.letter =
+            widget.letter.copyWith(val: _letter.val, status: _letter.status);
 
         if (notifier.InputWords.length - 1 == widget.indexRow &&
             widget.indexColumn ==
@@ -44,7 +43,9 @@ class _BoardTileState extends State<BoardTile> {
         }
       } else if ((notifier.InputWords.length - 1 == widget.indexRow &&
           widget.indexColumn >= notifier.InputWords.last.letters!.length)) {
-        _letter = Letter(val: '.');
+        Letter _letter = Letter(val: '.');
+        widget.letter =
+            widget.letter.copyWith(val: _letter.val, status: _letter.status);
       }
 
       return Flexible(
@@ -63,13 +64,13 @@ class _BoardTileState extends State<BoardTile> {
               child: Container(
                 alignment: Alignment.center,
                 decoration: BoxDecoration(
-                  color: _letter.letterColor,
-                  shape: _letter.status == LetterStatus.inWord
+                  color: widget.letter.letterColor,
+                  shape: widget.letter.status == LetterStatus.inWord
                       ? BoxShape.circle
                       : BoxShape.rectangle,
                 ),
                 child: Text(
-                  _letter.val,
+                  widget.letter.val,
                   style: const TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.bold,
