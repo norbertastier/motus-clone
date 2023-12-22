@@ -19,6 +19,12 @@ class Controller extends ChangeNotifier {
   int correctWordLenght() => _correctWord.length;
 
   void setCorrectWord({required String word}) {
+
+    if(InputWords.isNotEmpty){
+      InputWords = [Word()];
+      gameStatus = GameStatus.playing;
+    }
+
     _correctWord = word.toUpperCase();
     if (_correctWord.isNotEmpty) {
       InputWords.last.addLetter(_correctWord[0]);
@@ -101,7 +107,7 @@ class Controller extends ChangeNotifier {
     gameStatus = GameStatus.lost;
     }
     checkLine = true;
-    notifyListeners();
+    //notifyListeners();
   }
 
   addNextWord(){

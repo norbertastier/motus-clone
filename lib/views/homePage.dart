@@ -2,8 +2,11 @@ import 'dart:math';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:motus_clone/app/app.dart';
 import 'package:motus_clone/constants/colors.dart';
+import 'package:motus_clone/constants/status.dart';
 import 'package:motus_clone/controller.dart';
+import 'package:motus_clone/data/keyStatus.dart';
 import 'package:motus_clone/data/wordsForTheDraw.dart';
 import 'package:provider/provider.dart';
 
@@ -172,7 +175,15 @@ class HomeButton extends StatelessWidget {
             ),
           )),
       onPressed: () {
-        // Handle home button press
+        keyMap.updateAll(
+                (key, value) => value = LetterStatus.initial);
+
+
+        Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (context) => const App()),
+                (route) => false);
+
       },
     );
   }

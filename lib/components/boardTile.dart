@@ -46,12 +46,15 @@ class _BoardTileState extends State<BoardTile>
 
   void animateAndUpdateForCheckLine(Controller notifier) {
     Future.delayed(Duration(milliseconds: 300 * widget.indexColumn), () {
-      _animationController.notifyListeners();
-      updateLetter(notifier);
-      notifier.checkLine = false;
-      if (isLastLetterInRow(notifier)) {
-        notifier.addNextWord();
-        notifier.notifyListeners();
+      if (mounted) {
+        _animationController.notifyListeners();
+        
+        updateLetter(notifier);
+        notifier.checkLine = false;
+        if (isLastLetterInRow(notifier)) {
+          notifier.addNextWord();
+          notifier.notifyListeners();
+        }
       }
     });
   }

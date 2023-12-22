@@ -35,10 +35,14 @@ class _BounceState extends State<Bounce> with SingleTickerProviderStateMixin {
   }
 
   @override
-  void didUpdateWidget(covariant Bounce oldWidget){
-    if(widget.animate){
-      _animationController.reset();
-      _animationController.forward();
+  void didUpdateWidget(covariant Bounce oldWidget) {
+    if (widget.animate) {
+      WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+        if (mounted) {
+          _animationController.reset();
+          _animationController.forward();
+        }
+      });
     }
     super.didUpdateWidget(oldWidget);
   }
