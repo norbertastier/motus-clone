@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:motus_clone/app/app.dart';
+import 'package:motus_clone/components/message.dart';
 import 'package:motus_clone/constants/colors.dart';
 import 'package:motus_clone/constants/status.dart';
 import 'package:motus_clone/controller.dart';
@@ -27,6 +28,7 @@ class _HomePageState extends State<HomePage> {
 
   late String _word;
   bool _showInvalidWordMessage = false;
+  bool _lostShowTheWord = false;
   final FocusNode _focusNode = FocusNode();
 
   @override
@@ -41,6 +43,7 @@ class _HomePageState extends State<HomePage> {
           .setCorrectWord(word: _word);
       Provider.of<Controller>(context, listen: false).onInvalidWord =
           showInvalidWordMessage;
+      Provider.of<Controller>(context, listen: false).onLost = lostShowTheWord;
     });
 
     super.initState();
@@ -87,18 +90,13 @@ class _HomePageState extends State<HomePage> {
                       numRows: 6,
                     ),
                   ),
-                  Container(
-                      height: 60,
-                      child: _showInvalidWordMessage
-                          ? Center(
-                              child: Text(
-                                  'Le mot proposé n\'est pas dans la liste !',
-                                  style: const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  )),
-                            )
-                          : Container()),
+                  !_lostShowTheWord
+                      ? Message(
+                          show: _showInvalidWordMessage,
+                          message: 'Le mot proposé n\'est pas dans la liste !')
+                      : Message(
+                          show: _lostShowTheWord,
+                          message: 'Le mot était : ${_word}'),
                   KeyBoard(),
                   Spacer(),
                 ],
@@ -118,6 +116,10 @@ class _HomePageState extends State<HomePage> {
         setState(() => _showInvalidWordMessage = false);
       }
     });
+  }
+
+  void lostShowTheWord() {
+    setState(() => _lostShowTheWord = true);
   }
 
   void _KeyDownEvent(event) {
@@ -175,15 +177,12 @@ class HomeButton extends StatelessWidget {
             ),
           )),
       onPressed: () {
-        keyMap.updateAll(
-                (key, value) => value = LetterStatus.initial);
-
+        keyMap.updateAll((key, value) => value = LetterStatus.initial);
 
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const App()),
-                (route) => false);
-
+            (route) => false);
       },
     );
   }

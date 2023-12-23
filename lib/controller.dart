@@ -14,6 +14,8 @@ class Controller extends ChangeNotifier {
 
   void Function()? onInvalidWord;
 
+  void Function()? onLost;
+
   bool gameOver() => (gameStatus == GameStatus.won || gameStatus == GameStatus.lost);
 
   int correctWordLenght() => _correctWord.length;
@@ -105,6 +107,8 @@ class Controller extends ChangeNotifier {
     }
     if(InputWords.length == maxAttemps && gameStatus != GameStatus.won){
     gameStatus = GameStatus.lost;
+    onLost?.call();
+
     }
     checkLine = true;
     //notifyListeners();
