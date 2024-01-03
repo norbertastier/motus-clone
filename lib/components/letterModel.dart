@@ -28,6 +28,21 @@ class Letter extends Equatable {
     }
   }
 
+  List<Color> get gradientColor {
+    switch (status) {
+      case LetterStatus.initial:
+        return gradientInitial;
+      case LetterStatus.typing:
+        return gradientTypingColor;
+      case LetterStatus.notInWord:
+        return gradientNotInWordColor;
+      case LetterStatus.inWord:
+        return gradientInWordColor;
+      case LetterStatus.correct:
+        return gradientCorrectColor;
+    }
+  }
+
   Letter copyWith({
     String? val,
     LetterStatus? status,

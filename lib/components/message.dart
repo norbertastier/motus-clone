@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class Message extends StatelessWidget{
 
@@ -14,6 +15,7 @@ class Message extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Container(
+        //color: Colors.red,
         height: 60,
         child: show
             ? Center(
