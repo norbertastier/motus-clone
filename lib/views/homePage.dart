@@ -195,27 +195,41 @@ class HomeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: Container(
-          width: 40,
-          padding: const EdgeInsets.all(4.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: background,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5),
-                spreadRadius: 0,
-                blurRadius: 0,
-                offset: Offset(0, 5),
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Transform(
+          transform: Matrix4.identity()..rotateX(-0.5),
+          alignment: Alignment.topCenter,
+          child: Container(
+              width: 40,
+              padding: const EdgeInsets.all(4.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: background,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(1),
+                    blurRadius: 6,
+                    offset: Offset(0, 7),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(1),
+                    offset: Offset(0, 7),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: Icon(
-              Icons.home_rounded,
-              color: backgroundTop,
-            ),
-          )),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Icon(
+                  Icons.home_rounded,
+                  color: backgroundTop,
+                ),
+              )),
+        ),
+      ),
       onPressed: () {
         keyMap.updateAll((key, value) => value = LetterStatus.initial);
 

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:motus_clone/constants/colors.dart';
 
 class Message extends StatelessWidget{
 
@@ -24,6 +25,7 @@ class Message extends StatelessWidget{
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: background,
               )),
         )
             : Container());

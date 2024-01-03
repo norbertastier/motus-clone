@@ -42,22 +42,27 @@ class KeyBoard extends StatelessWidget {
                     LetterStatus? _status;
                     Color? _backgroundKeyColor;
                     Color? _borderKeyColor;
+                    List<Color> _gradientColors;
 
                     _status = keyMap[letter];
 
                     switch (_status) {
                       case LetterStatus.correct:
                         _backgroundKeyColor = correctColorKey;
-                        _borderKeyColor = Colors.white;
+                        _borderKeyColor = backgroundTop;
+                        _gradientColors = gradientCorrectColorKey;
                       case LetterStatus.inWord:
                         _backgroundKeyColor = inWordColorKey;
-                        _borderKeyColor = Colors.white;
+                        _borderKeyColor = backgroundTop;
+                        _gradientColors = gradientInWordColorKey;
                       case LetterStatus.notInWord:
                         _backgroundKeyColor = Colors.transparent;
                         _borderKeyColor = notInWordColorKey;
+                        _gradientColors = gradientNotInWordColorkey;
                       default:
                         _backgroundKeyColor = Colors.transparent;
-                        _borderKeyColor = Colors.white;
+                        _borderKeyColor = backgroundTop;
+                        _gradientColors = gradientKeyColor;
                     }
 
                     switch (letter) {
@@ -66,6 +71,7 @@ class KeyBoard extends StatelessWidget {
                           fit: FlexFit.tight,
                           child: _KeyboardButton(
                             letter: letter,
+                            gradient: _gradientColors,
                             icon: Icons.exit_to_app,
                             maxWidth_: w_ * 1.5,
                             borderColor: Colors.transparent,
@@ -76,6 +82,7 @@ class KeyBoard extends StatelessWidget {
                           fit: FlexFit.tight,
                           child: _KeyboardButton(
                             letter: letter,
+                            gradient: _gradientColors,
                             icon: Icons.backspace,
                             maxWidth_: w_ * 1.5,
                             borderColor: Colors.transparent,
@@ -87,6 +94,7 @@ class KeyBoard extends StatelessWidget {
                           backgroundColor: _backgroundKeyColor,
                           maxWidth_: w_,
                           borderColor: _borderKeyColor,
+                          gradient: _gradientColors,
                         );
                     }
                   }).toList(),
@@ -106,6 +114,7 @@ class _KeyboardButton extends StatelessWidget {
   final double maxHeight_;
   final Color borderColor;
   final Color backgroundColor;
+  final List<Color>? gradient;
 
   const _KeyboardButton({
     Key? key,
@@ -115,6 +124,7 @@ class _KeyboardButton extends StatelessWidget {
     this.maxWidth_ = maxWidth,
     this.borderColor = Colors.white,
     this.backgroundColor = Colors.transparent,
+    this.gradient,
   }) : super(key: key);
 
   @override
@@ -131,27 +141,70 @@ class _KeyboardButton extends StatelessWidget {
                 .setKeyTapped(value: letter);
           },
           child: Container(
-            decoration: BoxDecoration(
-              color: backgroundColor,
-              borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: borderColor, width: 2),
-            ),
-            width: maxWidth_,
-            height: maxHeight_,
             alignment: Alignment.center,
-            child: icon != null
-                ? FittedBox(
-                  child: Padding(
-                    padding: const EdgeInsets.all(4.0),
-                    child: Icon(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black, width: 1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+
+            child: Transform(
+              transform: Matrix4.identity()..rotateX(-0.5),
+              alignment: Alignment.topCenter,
+              child: Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: gradient != null
+                        ? gradient!
+                        : [Colors.transparent, Colors.transparent],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow:
+                  gradient != null && gradient!.last != Colors.transparent
+                      ? [
+                    BoxShadow(
+                        color: gradient!.last
+                            .withOpacity(1),
+                        offset: Offset(0, 7)),
+                    BoxShadow(
+                        color: Colors.black.withOpacity(0.4),
+                        offset: Offset(0, 7)),
+                  ]
+                      : null,
+                ),
+                width: maxWidth_,
+                height: maxHeight_,
+                alignment: Alignment.center,
+                child: Container(
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(12),
+                      gradient: LinearGradient(
+                          colors: [
+                            Colors.white,
+                            Colors.white.withOpacity(0)
+                          ],
+                          stops: [
+                            0.0,
+                            0.1
+                          ],
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter)),
+
+                  child: icon != null
+                      ? FittedBox(
+                    child: Padding(
+                      padding: const EdgeInsets.all(4.0),
+                      child: Icon(
                         icon,
-                        color: Colors.white,
+                        color: backgroundTop,
                         size: maxWidth_,
                       ),
-                  ),
-                )
-                : FittedBox(
-                  child: Text(
+                    ),
+                  )
+                      : FittedBox(
+                    child: Text(
                       letter!,
                       style: TextStyle(
                         color: borderColor,
@@ -159,7 +212,10 @@ class _KeyboardButton extends StatelessWidget {
                         fontSize: 20,
                       ),
                     ),
-                ),
+                  ),
+                )
+              ),
+            ),
           ),
         ),
       ),

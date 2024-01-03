@@ -156,12 +156,26 @@ class _BoardTileState extends State<BoardTile>
                                           .withOpacity(1),
                                       offset: Offset(0, 7)),
                                   BoxShadow(
-                                      color: Colors.black.withOpacity(0.25),
+                                      color: Colors.black.withOpacity(0.4),
                                       offset: Offset(0, 7)),
                                 ]
                               : null,
                     ),
                     child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          gradient: LinearGradient(
+                              colors: [
+                                Colors.white,
+                                Colors.white.withOpacity(0)
+                              ],
+                              stops: [
+                                0.0,
+                                0.1
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter)),
                       child: Text(
                         widget.letter.val,
                         style: const TextStyle(
