@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:motus_clone/animations/bounce.dart';
 import 'package:motus_clone/components/letterModel.dart';
+import 'package:motus_clone/constants/colors.dart';
 import 'package:motus_clone/constants/status.dart';
 import 'package:motus_clone/controller.dart';
 import 'package:provider/provider.dart';
@@ -41,14 +42,15 @@ class _BoardTileState extends State<BoardTile>
   }
 
   bool shouldUpdateForCheckLine(Controller notifier) {
-    return notifier.InputWords.length - 1 == widget.indexRow && notifier.checkLine;
+    return notifier.InputWords.length - 1 == widget.indexRow &&
+        notifier.checkLine;
   }
 
   void animateAndUpdateForCheckLine(Controller notifier) {
     Future.delayed(Duration(milliseconds: 300 * widget.indexColumn), () {
       if (mounted) {
         _animationController.notifyListeners();
-        
+
         updateLetter(notifier);
         notifier.checkLine = false;
         if (isLastLetterInRow(notifier)) {
@@ -61,9 +63,10 @@ class _BoardTileState extends State<BoardTile>
 
   bool shouldUpdateForNextInput(Controller notifier) {
     return (notifier.InputWords.length - 1 > widget.indexRow &&
-        widget.indexColumn < notifier.correctWordLenght()) ||
+            widget.indexColumn < notifier.correctWordLenght()) ||
         (notifier.InputWords.length - 1 == widget.indexRow &&
-            widget.indexColumn < notifier.InputWords.last.letters!.length) &&
+                widget.indexColumn <
+                    notifier.InputWords.last.letters!.length) &&
             !notifier.checkLine;
   }
 
@@ -82,18 +85,21 @@ class _BoardTileState extends State<BoardTile>
   }
 
   void clearForNoInput() {
-    widget.letter = widget.letter.copyWith(val: '.', status: LetterStatus.initial);
+    widget.letter =
+        widget.letter.copyWith(val: '.', status: LetterStatus.initial);
   }
 
   bool isLastLetterInRow(Controller notifier) {
-    return widget.indexColumn + 1 == notifier.InputWords[widget.indexRow].letters!.length;
+    return widget.indexColumn + 1 ==
+        notifier.InputWords[widget.indexRow].letters!.length;
   }
 
   void updateLetter(Controller notifier) {
-    Letter _letter = notifier.InputWords[widget.indexRow].letters![widget.indexColumn];
-    widget.letter = widget.letter.copyWith(val: _letter.val, status: _letter.status);
+    Letter _letter =
+        notifier.InputWords[widget.indexRow].letters![widget.indexColumn];
+    widget.letter =
+        widget.letter.copyWith(val: _letter.val, status: _letter.status);
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -124,23 +130,60 @@ class _BoardTileState extends State<BoardTile>
               margin: EdgeInsets.all(0),
               alignment: Alignment.center,
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.white, width: 2),
-                borderRadius: BorderRadius.circular(0),
+                border: Border.all(color: Colors.black, width: 1),
+                borderRadius: BorderRadius.circular(6),
               ),
               child: Bounce(
                 animate: animate,
-                child: Container(
-                  alignment: Alignment.center,
-                  decoration: BoxDecoration(
-                    color: widget.letter.letterColor,
-                    shape: widget.letter.status == LetterStatus.inWord
-                        ? BoxShape.circle
-                        : BoxShape.rectangle,
-                  ),
-                  child: Text(
-                    widget.letter.val,
-                    style: const TextStyle(
-                        fontSize: 30, fontWeight: FontWeight.bold),
+                child: Transform(
+                  transform: Matrix4.identity()..rotateX(-0.5),
+                  alignment: Alignment.topCenter,
+                  child: Container(
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(6),
+                      gradient: LinearGradient(
+                          colors: widget.letter.gradientColor,
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter),
+                      //color: widget.letter.letterColor,
+                      shape: BoxShape.rectangle,
+                      boxShadow:
+                          widget.letter.gradientColor.last != Colors.transparent
+                              ? [
+                                  BoxShadow(
+                                      color: widget.letter.gradientColor.last
+                                          .withOpacity(1),
+                                      offset: Offset(0, 7)),
+                                  BoxShadow(
+                                      color: Colors.black.withOpacity(0.4),
+                                      offset: Offset(0, 7)),
+                                ]
+                              : null,
+                    ),
+                    child: Container(
+                      alignment: Alignment.center,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(6),
+                          gradient: LinearGradient(
+                              colors: [
+                                Colors.white,
+                                Colors.white.withOpacity(0)
+                              ],
+                              stops: [
+                                0.0,
+                                0.1
+                              ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter)),
+                      child: Text(
+                        widget.letter.val,
+                        style: const TextStyle(
+                            color: background,
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                 ),
               ),

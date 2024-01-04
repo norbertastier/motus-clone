@@ -52,6 +52,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     FocusScope.of(context).requestFocus(_focusNode);
+
     return RawKeyboardListener(
       focusNode: _focusNode,
       onKey: (event) {
@@ -63,6 +64,7 @@ class _HomePageState extends State<HomePage> {
           child: Container(
             constraints: BoxConstraints(maxWidth: 430),
             child: Scaffold(
+              extendBodyBehindAppBar: true,
               appBar: AppBar(
                 centerTitle: true,
                 backgroundColor: Colors.transparent,
@@ -80,25 +82,63 @@ class _HomePageState extends State<HomePage> {
               body: Column(
                 children: [
                   Container(
-                    height: 50,
-                  ),
-                  Container(
-                    alignment: Alignment.center,
-                    padding: EdgeInsets.only(left: 16, right: 16),
-                    child: Board(
-                      numColumns: _word.length,
-                      numRows: 6,
+                    padding: EdgeInsets.only(bottom: 32),
+                    margin: EdgeInsets.only(bottom: 24),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          stops: [0.5, 1],
+                          colors: gradientBackgroundTop),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(1),
+                          spreadRadius: 0,
+                          blurRadius: 6,
+                          offset: Offset(0, 24),
+                        ),
+                        BoxShadow(
+                          color: gradientBackgroundTop.last.withOpacity(1),
+                          spreadRadius: 0,
+                          blurRadius: 0,
+                          offset: Offset(0, 16),
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
+                          spreadRadius: 0,
+                          blurRadius: 0,
+                          offset: Offset(0, 16),
+                        ),
+                      ],
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(32),
+                          bottomRight: Radius.circular(32)),
+                    ),
+                    child: Column(
+                      children: [
+                        Container(
+                          height: 156,
+                        ),
+                        Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(left: 16, right: 16),
+                          child: Board(
+                            numColumns: _word.length,
+                            numRows: 6,
+                          ),
+                        ),
+                        !_lostShowTheWord
+                            ? Message(
+                                show: _showInvalidWordMessage,
+                                message:
+                                    'Le mot proposé n\'est pas dans la liste !')
+                            : Message(
+                                show: _lostShowTheWord,
+                                message: 'Le mot était : ${_word}'),
+                      ],
                     ),
                   ),
-                  !_lostShowTheWord
-                      ? Message(
-                          show: _showInvalidWordMessage,
-                          message: 'Le mot proposé n\'est pas dans la liste !')
-                      : Message(
-                          show: _lostShowTheWord,
-                          message: 'Le mot était : ${_word}'),
-                  KeyBoard(),
-                  Spacer(),
+                  Expanded(child: Container(child: KeyBoard())),
                 ],
               ),
             ),
@@ -155,27 +195,41 @@ class HomeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: Container(
-          width: 40,
-          padding: const EdgeInsets.all(4.0),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8),
-            color: Colors.white,
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.5), // La couleur de l'ombre
-                spreadRadius: 0, // L'étendue de l'ombre
-                blurRadius: 0, // Le flou de l'ombre
-                offset: Offset(0, 5), // La position de l'ombre sur l'axe x,y
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.black, width: 1),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Transform(
+          transform: Matrix4.identity()..rotateX(-0.5),
+          alignment: Alignment.topCenter,
+          child: Container(
+              width: 40,
+              padding: const EdgeInsets.all(4.0),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: background,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(1),
+                    blurRadius: 6,
+                    offset: Offset(0, 7),
+                  ),
+                  BoxShadow(
+                    color: Colors.black.withOpacity(1),
+                    offset: Offset(0, 7),
+                  ),
+                ],
               ),
-            ],
-          ),
-          child: FittedBox(
-            fit: BoxFit.contain,
-            child: Icon(
-              Icons.home_rounded,
-              color: background,
-            ),
-          )),
+              child: FittedBox(
+                fit: BoxFit.contain,
+                child: Icon(
+                  Icons.home_rounded,
+                  color: backgroundTop,
+                ),
+              )),
+        ),
+      ),
       onPressed: () {
         keyMap.updateAll((key, value) => value = LetterStatus.initial);
 

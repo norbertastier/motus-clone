@@ -1,4 +1,6 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:motus_clone/constants/colors.dart';
 
 class Message extends StatelessWidget{
 
@@ -14,6 +16,7 @@ class Message extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return Container(
+        //color: Colors.red,
         height: 60,
         child: show
             ? Center(
@@ -22,6 +25,7 @@ class Message extends StatelessWidget{
               style: const TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
+                color: background,
               )),
         )
             : Container());

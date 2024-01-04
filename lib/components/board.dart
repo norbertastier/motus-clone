@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:motus_clone/components/boardTile.dart';
 import 'package:motus_clone/components/letterModel.dart';
 import 'package:motus_clone/components/wordModel.dart';
+import 'package:motus_clone/constants/colors.dart';
 
 class Board extends StatelessWidget {
   final int numRows;
@@ -21,32 +22,40 @@ class Board extends StatelessWidget {
 
     //print(_board);
 
-    return Column(
-      children: _board
-          .asMap()
-          .map(
-            (i, word) => MapEntry(
-              i,
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: word.letters!
-                    .asMap()
-                    .map(
-                      (j, letter) => MapEntry(
-                          j,
-                          BoardTile(
-                            letter: Letter.empty(),
-                            indexRow: i,
-                            indexColumn: j,
-                          )),
-                    )
-                    .values
-                    .toList(),
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(6),
+      ),
+      //margin: EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: _board
+            .asMap()
+            .map(
+              (i, word) => MapEntry(
+                i,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: word.letters!
+                      .asMap()
+                      .map(
+                        (j, letter) => MapEntry(
+                            j,
+                            BoardTile(
+                              letter: Letter.empty(),
+                              indexRow: i,
+                              indexColumn: j,
+                            )),
+                      )
+                      .values
+                      .toList(),
+                ),
               ),
-            ),
-          )
-          .values
-          .toList(),
+            )
+            .values
+            .toList(),
+      ),
     );
   }
 }
